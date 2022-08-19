@@ -9,40 +9,42 @@ const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 const App = () => {
   // State 
-  const [walletAddress, setWalletAddress] = useState(null)
+  const [walletAddress, setWalletAddress] = useState(null);
 
   // Actions
   const checkIfWalletIsConnected = async () => {
     try {
       const { solana } = window;
-
+  
       if (solana) {
         if (solana.isPhantom) {
-          console.log('Phantom Wallet Found!');
-
-          // get the response from the connected wallet if the wallet has been connected before. 
-          const response = await solana.connect({ onlyIfTrusted: true});
-          console.log('Connected wallet with Public Key:', response.publicKey.toString());
-
+          console.log('Phantom wallet found!');
+          const response = await solana.connect({ onlyIfTrusted: true });
+          console.log(
+            'Connected with Public Key:',
+            response.publicKey.toString()
+          );
+  
+          /*
+           * Set the user's publicKey in state to be used later!
+           */
           setWalletAddress(response.publicKey.toString());
-
         }
       } else {
         alert('Solana object not found! Get a Phantom Wallet 👻');
       }
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   };
 
   // define connectWallet for compile atm
-
-  const connectWallet = async() => {
+  const connectWallet = async () => {
     const { solana } = window;
-
+  
     if (solana) {
       const response = await solana.connect();
-      console.log('Connected with Public Key: ', response.publicKey.toString());
+      console.log('Connected with Public Key:', response.publicKey.toString());
       setWalletAddress(response.publicKey.toString());
     }
   };
@@ -56,12 +58,9 @@ const App = () => {
       >
         Connect yo wallet
       </button>
-  )
+  );
 
-  /*
-   * When our component first mounts, let's check to see if we have a connected
-   * Phantom Wallet
-   */
+  // UseEffects
   useEffect(() => {
     const onLoad = async () => {
       await checkIfWalletIsConnected();
@@ -69,17 +68,17 @@ const App = () => {
     window.addEventListener('load', onLoad);
     return () => window.removeEventListener('load', onLoad);
   }, []);
-
+  
   return (
     <div className="App">
-      {/* This was solely added for some styling fanciness */}
-			<div className={walletAddress ? 'authed-container' : 'container'}></div>
-      <div className="container">
+			{/* This was solely added for some styling fanciness */}
+			<div className={walletAddress ? 'authed-container' : 'container'}>
         <div className="header-container">
           <p className="header">🖼 GIF Portal</p>
           <p className="sub-text">
             View your GIF collection in the metaverse ✨
           </p>
+          {/* Add the condition to show this only if we don't have a wallet address */}
           {!walletAddress && renderNotConnectedContainer()}
         </div>
         <div className="footer-container">
