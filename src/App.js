@@ -28,7 +28,7 @@ const App = () => {
 
         }
       } else {
-        alert('Solana object not found. Install a phantom wallet!');
+        alert('Solana object not found! Get a Phantom Wallet 👻');
       }
     } catch (error) {
       console.error(error)
@@ -41,11 +41,11 @@ const App = () => {
     const { solana } = window;
 
     if (solana) {
-      const response = solana.connect();
+      const response = await solana.connect();
       console.log('Connected with Public Key: ', response.publicKey.toString());
-      setWalletAddress(response.publicKey.toString())
+      setWalletAddress(response.publicKey.toString());
     }
-  }
+  };
 
   //Render the UI when the user hasn't connected their wallet to our app yet;
 
