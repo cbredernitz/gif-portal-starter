@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import twitterLogo from './assets/twitter-logo.svg';
 import './App.css';
 
@@ -8,6 +8,10 @@ const TWITTER_HANDLE = '_buildspace';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 const App = () => {
+  // State 
+  const [walletAddress, setWalletAddress] = useState(null)
+
+  // Actions
   const checkIfWalletIsConnected = async () => {
     try {
       const { solana } = window;
@@ -16,9 +20,11 @@ const App = () => {
         if (solana.isPhantom) {
           console.log('Phantom Wallet Found!');
 
-          // get the response from the connected wallet ONLY IF TRUSTED;
+          // get the response from the connected wallet if the wallet has been connected before. 
           const response = await solana.connect({ onlyIfTrusted: true});
-          console.log('Connected wallet with Public Key:', response.publicKey.toString())
+          console.log('Connected wallet with Public Key:', response.publicKey.toString());
+
+          setWalletAddress(response.publicKey.toString());
 
         }
       } else {
@@ -31,7 +37,15 @@ const App = () => {
 
   // define connectWallet for compile atm
 
-  const connectWallet = async() => {}
+  const connectWallet = async() => {
+    const { solana } = window;
+
+    if (solana) {
+      const response = solana.connect();
+      console.log('Connected with Public Key: ', response.publicKey.toString());
+      setWalletAddress(response.publicKey.toString())
+    }
+  }
 
   //Render the UI when the user hasn't connected their wallet to our app yet;
 
@@ -58,13 +72,15 @@ const App = () => {
 
   return (
     <div className="App">
+      {/* This was solely added for some styling fanciness */}
+			<div className={walletAddress ? 'authed-container' : 'container'}></div>
       <div className="container">
         <div className="header-container">
           <p className="header">🖼 GIF Portal</p>
           <p className="sub-text">
             View your GIF collection in the metaverse ✨
           </p>
-          {renderNotConnectedContainer()}
+          {!walletAddress && renderNotConnectedContainer()}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
