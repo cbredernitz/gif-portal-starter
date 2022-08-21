@@ -16,6 +16,9 @@ const TEST_GIFS = [
 const App = () => {
   // State 
   const [walletAddress, setWalletAddress] = useState(null);
+  const [inputValue, setInputValue] = useState('');
+  const [gifList, setGifList] = useState([]);
+
 
   // Actions
   const checkIfWalletIsConnected = async () => {
@@ -44,6 +47,7 @@ const App = () => {
     }
   };
 
+
   // define connectWallet for compile atm
   const connectWallet = async () => {
     const { solana } = window;
@@ -55,6 +59,26 @@ const App = () => {
     }
   };
 
+
+  const sendGif = async () => {
+    if (inputValue.length > 0) {
+      console.log('Gif Link: ', inputValue);
+      // Add the new input value to the current state of gifList;
+      setGifList([...gifList, inputValue]);
+      // after adding reset property of inputValue
+      setInputValue('')
+    } else {
+      console.log('Empty input. Try again.');
+    }
+  };
+
+
+  const onInputChange = (event) => {
+    const { value } = event.target;
+    setInputValue(value);
+  };
+
+
   //Render the UI when the user hasn't connected their wallet to our app yet;
   const renderNotConnectedContainer = () => (
     <button
@@ -65,20 +89,26 @@ const App = () => {
       </button>
   );
 
+
   //Render gifGrid if the wallet is connected
   const renderConnectedContainer = () => (
     <div className="connected-container">
-      {/* Go ahead and add this input and button to start */}
       <form
         onSubmit={(event) => {
           event.preventDefault();
+          sendGif();
         }}
       >
-        <input type="text" placeholder="Enter gif link!" />
+        <input 
+          type="text" 
+          placeholder="Enter gif link!"
+          value={inputValue}
+          onChange={onInputChange} />
         <button type="submit" className="cta-button submit-gif-button">Submit</button>
       </form>
       <div className="gif-grid">
-        {TEST_GIFS.map((gif) => (
+        {/* Map through gifList instead of TEST_GIFS */}
+        {gifList.map((gif) => (
           <div className="gif-item" key={gif}>
             <img src={gif} alt={gif} />
           </div>
@@ -86,6 +116,7 @@ const App = () => {
       </div>
     </div>
   );
+
 
   // UseEffects
   useEffect(() => {
@@ -96,6 +127,19 @@ const App = () => {
     return () => window.removeEventListener('load', onLoad);
   }, []);
   
+
+  useEffect(() => {
+    if (walletAddress){
+      console.log('Fetching gifs from wallet...');
+
+      // Call solana program here;
+
+      // Set state of list to response; For now we are going to use test data;
+      setGifList(TEST_GIFS);
+    }
+  },[walletAddress]);
+
+
   return (
     <div className="App">
 			{/* This was solely added for some styling fanciness */}
