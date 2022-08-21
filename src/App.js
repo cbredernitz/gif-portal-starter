@@ -76,15 +76,15 @@ const App = () => {
         <input type='text' placeholder="Ender gif link!" />
         <button type='submit' className='cts-button submit-gif-button'>Submit</button>
       </form>
-      <div className='gif-grid'>
+      <div className="gif-grid">
         {TEST_GIFS.map(gif => (
-          <div className="gif-item" key ={gif}>
-            <img src={gif} alt={gif}/>
+          <div className="gif-item" key={gif}>
+            <img src={gif} alt={gif} />
           </div>
         ))}
       </div>
     </div>
-  }
+  };
 
   // UseEffects
   useEffect(() => {
