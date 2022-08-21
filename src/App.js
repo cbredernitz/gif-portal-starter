@@ -6,6 +6,12 @@ import './App.css';
 // Constants
 const TWITTER_HANDLE = '_buildspace';
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
+const TEST_GIFS = [
+	'https://i.giphy.com/media/eIG0HfouRQJQr1wBzz/giphy.webp',
+	'https://media3.giphy.com/media/L71a8LW2UrKwPaWNYM/giphy.gif?cid=ecf05e47rr9qizx2msjucl1xyvuu47d7kf25tqt2lvo024uo&rid=giphy.gif&ct=g',
+	'https://media4.giphy.com/media/AeFmQjHMtEySooOc8K/giphy.gif?cid=ecf05e47qdzhdma2y3ugn32lkgi972z9mpfzocjj6z1ro4ec&rid=giphy.gif&ct=g',
+	'https://i.giphy.com/media/PAqjdPkJLDsmBRSYUp/giphy.webp'
+]
 
 const App = () => {
   // State 
@@ -50,15 +56,27 @@ const App = () => {
   };
 
   //Render the UI when the user hasn't connected their wallet to our app yet;
-
   const renderNotConnectedContainer = () => (
     <button
       className='cta-button connect-wallet-button'
       onClick={connectWallet}
       >
-        Connect yo wallet
+        Connect da wallet
       </button>
   );
+
+  //Render gifGrid if the wallet is connected
+  const renderConnectedContainer = () => {
+    <div className='connected-container'>
+      <div className='gif-grid'>
+        {TEST_GIFS.map(gif => (
+          <div className="gif-item" key ={gif}>
+            <img src={gif} alt={gif}/>
+          </div>
+        ))}
+      </div>
+    </div>
+  }
 
   // UseEffects
   useEffect(() => {
@@ -80,6 +98,7 @@ const App = () => {
           </p>
           {/* Add the condition to show this only if we don't have a wallet address */}
           {!walletAddress && renderNotConnectedContainer()}
+          {walletAddress && renderConnectedContainer()}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
