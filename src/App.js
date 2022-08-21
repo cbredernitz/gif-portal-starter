@@ -72,7 +72,10 @@ const App = () => {
         onSubmit={(event) => {
           event.preventDefault();
         }}
-
+      >
+        <input type='text' placeholder="Ender gif link!" />
+        <button type='submit' className='cts-button submit-gif-button'>Submit</button>
+      </form>
       <div className='gif-grid'>
         {TEST_GIFS.map(gif => (
           <div className="gif-item" key ={gif}>
