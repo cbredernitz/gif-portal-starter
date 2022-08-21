@@ -105,7 +105,6 @@ const App = () => {
           <p className="sub-text">
             View your GIF collection in the metaverse ✨
           </p>
-          <div className="sub-text">{walletAddress}</div>
         {/* Add the condition to show this only if we don't have a wallet address */}
         {!walletAddress && renderNotConnectedContainer()}
         {walletAddress && renderConnectedContainer()}
