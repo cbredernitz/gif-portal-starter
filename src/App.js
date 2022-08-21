@@ -68,6 +68,11 @@ const App = () => {
   //Render gifGrid if the wallet is connected
   const renderConnectedContainer = () => {
     <div className='connected-container'>
+      <form 
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
+
       <div className='gif-grid'>
         {TEST_GIFS.map(gif => (
           <div className="gif-item" key ={gif}>
@@ -96,10 +101,10 @@ const App = () => {
           <p className="sub-text">
             View your GIF collection in the metaverse ✨
           </p>
-          {/* Add the condition to show this only if we don't have a wallet address */}
-          {!walletAddress && renderNotConnectedContainer()}
-          {walletAddress && renderConnectedContainer()}
         </div>
+        {/* Add the condition to show this only if we don't have a wallet address */}
+        {!walletAddress && renderNotConnectedContainer()}
+        {walletAddress && renderConnectedContainer()}
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
           <a
