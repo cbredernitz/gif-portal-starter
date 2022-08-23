@@ -116,9 +116,9 @@ const App = () => {
 
 
   const getProvider = () => {
-    const connection = new Connection(network, opts.preflightCommitement);
+    const connection = new Connection(network, opts.preflightCommitment);
     const provider = new Provider(
-      connection, window.solana, opts.preflightCommitement,
+      connection, window.solana, opts.preflightCommitment,
     );
     return provider;
   }
