@@ -5,12 +5,15 @@ import { Program, Provider, web3 } from '@project-serum/anchor';
 import twitterLogo from './assets/twitter-logo.svg';
 import './App.css';
 import idl from './idl.json';
+import kp from './keypair.json'
 
 // SystemProgram is a reference to the Solana runtime!
 const { SystemProgram, Keypair } = web3;
 
-// Create a keypair for the account that will hold the GIF data.
-let baseAccount = Keypair.generate();
+// Account creation and storage
+const arr = Object.values(kp._keypair.secretKey)
+const secret = new Uint8Array(arr)
+const baseAccount = web3.Keypair.fromSecretKey(secret)
 
 // Get our program's id from the IDL file.
 const programID = new PublicKey(idl.metadata.address);
@@ -97,14 +100,25 @@ const App = () => {
 
 
   const sendGif = async () => {
-    if (inputValue.length > 0) {
-      console.log('Gif Link: ', inputValue);
-      // Add the new input value to the current state of gifList;
-      setGifList([...gifList, inputValue]);
-      // after adding reset property of inputValue
-      setInputValue('')
-    } else {
-      console.log('Empty input. Try again.');
+    if (inputValue.length == 0) {
+      console.log('No gif link given!');
+      return
+    }
+
+    setInputValue('');
+    try {
+      const provider = getProvider();
+      const program = new Program(idl, programID, provider);
+
+      await program.rpc.addGif(inputValue, {
+        accounts: {
+          baseAcount: baseAccount.publicKey,
+          user: provider.wallet.publicKey,
+        },
+      });
+      console.log("Gif successfully sent to program", inputValue);
+    } catch (error) {
+      console.log("Error sending gif: ", error);
     }
   };
 
