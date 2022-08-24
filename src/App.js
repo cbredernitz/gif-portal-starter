@@ -117,6 +117,9 @@ const App = () => {
         },
       });
       console.log("Gif successfully sent to program", inputValue);
+
+      // NEED THIS LINE OR PAGE WONT REFRESH WITH NEWLY ADDED GIFS
+      await getGifList();
     } catch (error) {
       console.log("Error sending gif: ", error);
     }
